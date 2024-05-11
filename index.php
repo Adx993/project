@@ -1,6 +1,6 @@
  <?php
  error_reporting('0');
- require_once 'con.php';
+ require_once 'connection.php';
 
  $req_type = $_SERVER['REQUEST_METHOD'];
 

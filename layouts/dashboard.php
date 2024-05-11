@@ -1,5 +1,5 @@
 <?php 
-require_once './con.php';
+require_once './connection.php';
 require_once 'header.php';
 
 $check = $_SESSION['logged_user'];
