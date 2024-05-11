@@ -1,30 +1,16 @@
-<?php 
-require_once './connection.php';
+<?php
+use mainadmin\admin;
+
 require_once 'header.php';
+require_once './connection.php';
+require_once $path . 'action/admin.php';
+
+$products           = admin::products();
+$results_per_page   = $products['results_per_page'];
+$current_page       = $products['current_page'];
+$products           = $products['products'];
 
 $check = $_SESSION['logged_user'];
-
-// Pagination configuration
-$results_per_page   = 5; // Number of results per page
-$current_page       = isset($_GET['page']) ? $_GET['page'] : 1; // Get current page, default to 1 if not set
-
-// SQL query to fetch total number of products
-$sql_count          = "SELECT COUNT(*) AS total FROM `pro_products` WHERE `deleted` = '0'";
-$result_count       = mysqli_query($db, $sql_count);
-$row_count          = mysqli_fetch_assoc($result_count);
-$total_products     = $row_count['total'];
-
-// Calculate total pages
-$total_pages        = ceil($total_products / $results_per_page);
-
-// Calculate SQL limit starting point for the current page
-$offset             = ($current_page - 1) * $results_per_page;
-
-// SQL query to fetch products for the current page
-$sql                = "SELECT * FROM `pro_products` WHERE `deleted` = '0' LIMIT $offset, $results_per_page";
-$query              = mysqli_query($db, $sql);
-$products           = mysqli_fetch_all($query, MYSQLI_ASSOC);
-
 ?>
 
 <main class="container">
@@ -41,6 +27,13 @@ $products           = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
     <table class="table table-striped">
         <h3>List of available Products:</h3>
+        <div>
+            <!-- <form class="form-inline my-2 my-lg-0"> -->
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <!-- </form> -->
+        </div>
+
         <thead>
             <tr>
                 <th scope="col">S.No.</th>
@@ -52,7 +45,6 @@ $products           = mysqli_fetch_all($query, MYSQLI_ASSOC);
         </thead>
         <tbody>
             <?php
-            // $num = ($current_page - 1) * $results_per_page + 1;
             $num = 1;
             foreach ($products as $product) {
             ?>
@@ -73,26 +65,26 @@ $products           = mysqli_fetch_all($query, MYSQLI_ASSOC);
         </tbody>
     </table>
 
-    <!-- Bootstrap Pagination -->
-<nav aria-label="Page navigation">
-    <ul class="pagination">
-    <?php
-    $sql = "SELECT COUNT(*) AS total FROM `pro_products` WHERE `deleted` = '0'";
-    $result = mysqli_query($db, $sql);
-    $row = mysqli_fetch_assoc($result);
-    $total_pages = ceil($row["total"] / $results_per_page);
-
-    for ($page = 1; $page <= $total_pages; $page++) {
-        $active_class = ($page == $current_page) ? 'active' : ''; 
-        ?>
-        <li class="page-item <?php echo $active_class; ?>">
-            <a class="page-link" href="#" data-page="<?php echo $page; ?>"><?php echo $page; ?></a>
-        </li>
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
         <?php
-    }
-?>
-    </ul>
-</nav>
+            $sql = "SELECT COUNT(*) AS total FROM `pro_products` WHERE `deleted` = '0'";
+            $result = mysqli_query($db, $sql);
+            $row = mysqli_fetch_assoc($result);
+            $total_pages = ceil($row["total"] / $results_per_page);
+
+            for ($page = 1; $page <= $total_pages; $page++) {
+                $active_class = ($page == $current_page) ? 'active' : ''; 
+                ?>
+                <li class="page-item <?php echo $active_class; ?>">
+                    <a class="page-link" href="#" data-page="<?php echo $page; ?>"><?php echo $page; ?></a>
+                </li>
+                <?php
+            }
+        ?>
+        </ul>
+    </nav>
 
 </main>
 

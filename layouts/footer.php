@@ -14,6 +14,7 @@
         
         </div>
         <div class="modal-footer">
+            <input type="hidden" name="id" value="update_product">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary update_prod">Save changes</button>
         </div>
@@ -39,6 +40,7 @@
     //update the product 
 $(document).ready(function(){
     $('.update_prod').click(function(e){
+        // var action = 'update_product';
         e.preventDefault(); 
 
         var formData = $('form').serialize();

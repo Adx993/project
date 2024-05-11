@@ -11,6 +11,6 @@ if($db == false){
     echo "db connection failed";
     
 }
-
+$path = 'C:\wamp64\www\2024\local\PROJECT/';
 
 ?>
