@@ -4,7 +4,7 @@ namespace mainadmin;
 
 use mysqli_result;
 
-require_once '../con.php';
+// require_once '../con.php';
 
 class admin{
 
@@ -115,9 +115,6 @@ class admin{
     
         return $html;
     }
-    
-    
-
 
 
 
