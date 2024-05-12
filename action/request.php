@@ -56,6 +56,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pages  = admin::cleanValue($pages);
             $result = admin::pagination($pages);
             echo $result;
+        }elseif ($action == "search_product") {
+            $type   = $_POST['type'];
+            $type   = admin::cleanValue($type);
+            $search = $_POST['search'];
+            $search = admin::cleanValue($search);
+            $result = admin::products($type, $search);
+            
+            // print_r($result);
+            echo json_encode($result);
+            
         }
     }else{
 

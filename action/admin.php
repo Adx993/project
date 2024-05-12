@@ -6,50 +6,46 @@ require_once $path.'connection.php';
 
 class admin{
 
-    public static function products(){
-        global $db;
-
-        $sql = "SELECT * FROM `pro_products` WHERE `deleted` = '0'";
-
-
-        $searchTerm = isset($_POST['search']) ? $_POST['search'] : '';
-
-        if (!empty($search)) {
-            $sql .= "   OR name LIKE '%$searchTerm%' 
-                        OR description LIKE '%$searchTerm%' 
-                        OR price LIKE '%$searchTerm%' 
-                        OR quantity LIKE '%$searchTerm%'
-                    ";
-        }
-
-        $results_per_page   = 5;
-        $current_page       = isset($_POST['page']) ? $_POST['page'] : 1;
-        $sql_count          = "SELECT COUNT(*) AS total FROM `pro_products` WHERE `deleted` = '0'";
-        $result_count       = mysqli_query($db, $sql_count);
-        $row_count          = mysqli_fetch_assoc($result_count);
-        $total_products     = $row_count['total'];
-        $total_pages        = ceil($total_products / $results_per_page);
-        $offset             = ($current_page - 1) * $results_per_page;
-
-
-
-        $sql               .= " LIMIT $offset, $results_per_page";
-        $query              = mysqli_query($db, $sql);
-        $products           = mysqli_fetch_all($query, MYSQLI_ASSOC);
-
-        $result = [];
-        $result['products']     = $products;
-        $result['total_pages']  = $total_pages;
-        $result['current_page'] = $current_page;
-        $result['results_per_page'] = $results_per_page;
-
-
-
-        return $result;
-    }
-
-
-
+        public static function products($type = null, $search = null) {
+            global $db;
+    
+            $sql = "SELECT * FROM `pro_products` WHERE `deleted` = '0'";
+    
+            if ($type && $search) {
+                $type = mysqli_real_escape_string($db, $type);
+                $search = mysqli_real_escape_string($db, $search);
+                $sql .= " AND `$type` LIKE '%$search%'";
+            }
+    
+            $results_per_page = 5;
+            $current_page = isset($_POST['page']) ? $_POST['page'] : 1;
+            $offset = ($current_page - 1) * $results_per_page;
+            $sql .= " LIMIT $offset, $results_per_page";
+    
+            $query = mysqli_query($db, $sql);
+    
+            $products = [];
+            while ($row = mysqli_fetch_assoc($query)) {
+                $products[] = $row;
+            }
+    
+            $total_products_query = mysqli_query($db, "SELECT COUNT(*) as total FROM `pro_products` WHERE `deleted` = '0'");
+            if ($type && $search) {
+                $total_products_query = mysqli_query($db, "SELECT COUNT(*) as total FROM `pro_products` WHERE `deleted` = '0' AND `$type` LIKE '%$search%'");
+            }
+            $total_products = mysqli_fetch_assoc($total_products_query)['total'];
+    
+            $total_pages = ceil($total_products / $results_per_page);
+    
+            $result = [];
+            $result['products'] = $products;
+            $result['total_pages'] = $total_pages;
+            $result['current_page'] = $current_page;
+            $result['results_per_page'] = $results_per_page;
+    
+            return $result;
+        } 
+    
 
     public static function login($email, $password){
         global $db;

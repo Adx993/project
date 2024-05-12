@@ -8,12 +8,14 @@ require_once $path . 'action/admin.php';
 $products           = admin::products();
 $results_per_page   = $products['results_per_page'];
 $current_page       = $products['current_page'];
+$total_pages        = $products['total_pages'];
 $products           = $products['products'];
 
 $check = $_SESSION['logged_user'];
 ?>
 
 <main class="container">
+    
     <?php foreach ($check as $key => $value){ 
         if ($key === 'name' || $key === 'created'){ ?>
             <div class="d-flex align-items-center p-3 my-3 rounded shadow-sm">
@@ -26,13 +28,28 @@ $check = $_SESSION['logged_user'];
     } ?>
 
     <table class="table table-striped">
+        
         <h3>List of available Products:</h3>
-        <div>
-            <!-- <form class="form-inline my-2 my-lg-0"> -->
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            <!-- </form> -->
-        </div>
+            <!-- Search Section -->
+        <form id="searchForm" method="post">
+            <div class="row mb-3">
+                <div class="col">
+                    <select name="type" id="searchType" class="form-select form-select-lg">
+                        <option selected>Search Type</option>
+                        <option value="name">Name</option>
+                        <option value="description">Description</option>
+                        <option value="price">Price</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <input type="text" name="search" id="searchInput" class="form-control" placeholder="Search..">
+                </div>
+                <input type="hidden" name="action" value="search_product">
+                <div class="col">
+                    <button type="button" class="btn btn-primary find">Go</button>
+                </div>
+            </div>
+        </form>
 
         <thead>
             <tr>
@@ -67,22 +84,12 @@ $check = $_SESSION['logged_user'];
 
     <!-- Pagination -->
     <nav aria-label="Page navigation">
-        <ul class="pagination">
-        <?php
-            $sql = "SELECT COUNT(*) AS total FROM `pro_products` WHERE `deleted` = '0'";
-            $result = mysqli_query($db, $sql);
-            $row = mysqli_fetch_assoc($result);
-            $total_pages = ceil($row["total"] / $results_per_page);
-
-            for ($page = 1; $page <= $total_pages; $page++) {
-                $active_class = ($page == $current_page) ? 'active' : ''; 
-                ?>
-                <li class="page-item <?php echo $active_class; ?>">
+        <ul id="pagination" class="pagination">
+            <?php for ($page = 1; $page <= $total_pages; $page++) : ?>
+                <li class="page-item <?php echo ($page == $current_page) ? 'active' : ''; ?>">
                     <a class="page-link" href="#" data-page="<?php echo $page; ?>"><?php echo $page; ?></a>
                 </li>
-                <?php
-            }
-        ?>
+            <?php endfor; ?>
         </ul>
     </nav>
 

@@ -172,6 +172,51 @@ $(document).ready(function(){
     });
 });
 
+// search product
+$(document).ready(function(){
+    $('.find').click(function(e){
+        e.preventDefault(); 
+
+        var formData = $('#searchForm').serialize();
+
+        $.ajax({
+            url: 'http://localhost/2024/local/PROJECT/action/request.php',
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response){
+                $('tbody').empty();
+                $.each(response.products, function(index, product) {
+                    var row = '<tr>' +
+                        '<th scope="row">' + (index + 1) + '</th>' +
+                        '<td>' + product.name + '</td>' +
+                        '<td>' + product.description + '</td>' +
+                        '<td>' + product.price + '</td>' +
+                        '<td>' +
+                        '<button type="button" class="btn btn-success prod_edit" data-toggle="modal" data-target="#exampleModal" data-id="' + product.id + '">Edit</button>' +
+                        '<button class="btn btn-danger prod_remove" data-id="' + product.id + '">Remove</button>' +
+                        '</td>' +
+                        '</tr>';
+                    $('tbody').append(row);
+                });
+                
+                // Update pagination links
+                $('#pagination').empty();
+                for (var page = 1; page <= response.total_pages; page++) {
+                    var link = $('<li class="page-item"><a class="page-link" href="#" data-page="' + page + '">' + page + '</a></li>');
+                    if (page === response.current_page) {
+                        link.addClass('active');
+                    }
+                    $('#pagination').append(link);
+                }
+            },
+            error: function(xhr, status, error){
+                console.error(xhr.responseText);
+            }
+        }); 
+    });
+});
+
 
 
 </script>
