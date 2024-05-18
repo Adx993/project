@@ -31,25 +31,29 @@ $check = $_SESSION['logged_user'];
         
         <h3>List of available Products:</h3>
             <!-- Search Section -->
-        <form id="searchForm" method="post">
-            <div class="row mb-3">
-                <div class="col">
-                    <select name="type" id="searchType" class="form-select form-select-lg">
-                        <option selected>Search Type</option>
-                        <option value="name">Name</option>
-                        <option value="description">Description</option>
-                        <option value="price">Price</option>
-                    </select>
-                </div>
-                <div class="col">
-                    <input type="text" name="search" id="searchInput" class="form-control" placeholder="Search..">
-                </div>
-                <input type="hidden" name="action" value="search_product">
-                <div class="col">
-                    <button type="button" class="btn btn-primary find">Go</button>
-                </div>
+        
+            <div style="display: inline-flex;" class="mx-auto">
+                <form id="searchForm" method="post">
+                    <div class="p-3" style="padding: 10px;">
+                        <label>Search:</label>
+                        <select name="type" id="searchType">
+                            <option selected>Search Type</option>
+                            <option value="name">Name</option>
+                            <option value="description">Description</option>
+                            <option value="price">Price</option>
+                        </select>
+                    </div>
+                    
+                    <div class="p-3" style="padding: 10px;">
+                        <input type="text" name="search" id="searchInput" class="form-control" placeholder="Search..">
+                    </div>
+                    <input type="hidden" name="action" value="search_product">
+                    <div class="p-3" style="padding: 10px;">
+                        <button type="button" class="btn btn-primary find">Go</button>
+                    </div>
+                </form>
             </div>
-        </form>
+
 
         <thead>
             <tr>

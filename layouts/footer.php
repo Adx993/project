@@ -14,7 +14,6 @@
         
         </div>
         <div class="modal-footer">
-            <input type="hidden" name="id" value="update_product">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary update_prod">Save changes</button>
         </div>

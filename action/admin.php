@@ -126,6 +126,8 @@ class admin{
     
         $sql    = "UPDATE `pro_products` SET `name` = '{$name}', `description` = '{$description}', `price` = '{$price}', `quantity` = '{$quantity}' WHERE `id` = '{$id}'";
         $query  = mysqli_query($db, $sql);
+
+        echo $sql;
     
         if ($query) {
             $msg = '1';
